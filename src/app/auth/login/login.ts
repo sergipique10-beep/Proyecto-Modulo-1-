@@ -4,19 +4,18 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './register.html',
-  styleUrl: './register.scss',
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
-export class Register {
+export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   form = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
+    email:    ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
@@ -24,8 +23,7 @@ export class Register {
   errorMsg = signal('');
   showPassword = signal(false);
 
-  get nombre() { return this.form.get('nombre'); }
-  get email()  { return this.form.get('email'); }
+  get email()    { return this.form.get('email'); }
   get password() { return this.form.get('password'); }
 
   onSubmit(): void {
@@ -36,8 +34,8 @@ export class Register {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    const { nombre, email, password } = this.form.value;
-    this.authService.register(nombre!, email!, password!)
+    const { email, password } = this.form.value;
+    this.authService.login(email!, password!)
       .then(() => this.router.navigate(['/pedidos']))
       .catch(err => this.errorMsg.set(err.message))
       .finally(() => this.loading.set(false));

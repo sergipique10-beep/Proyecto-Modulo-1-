@@ -9,8 +9,8 @@
           <rect x="27" y="28" width="10" height="14" rx="1" fill="#fdf6e3" stroke="#6B4226" stroke-width="1.5"/>
         </svg>
       </div>
-      <h1>Bienvenido a la Masía</h1>
-      <p class="subtitle">Creá tu cuenta para ingresar</p>
+      <h1>Bienvenido de vuelta</h1>
+      <p class="subtitle">Ingresá con tu cuenta</p>
     </div>
 
     <div class="ornament-divider">
@@ -20,21 +20,6 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-      <div class="field">
-        <label for="nombre">Nombre completo</label>
-        <input
-          id="nombre"
-          type="text"
-          formControlName="nombre"
-          placeholder="Tu nombre"
-          autocomplete="name"
-          [class.invalid]="nombre?.invalid && nombre?.touched"
-        />
-        @if (nombre?.invalid && nombre?.touched) {
-          <span class="error-text">Ingresá al menos 2 caracteres</span>
-        }
-      </div>
 
       <div class="field">
         <label for="email">Correo electrónico</label>
@@ -58,8 +43,8 @@
             id="password"
             [type]="showPassword() ? 'text' : 'password'"
             formControlName="password"
-            placeholder="Mínimo 6 caracteres"
-            autocomplete="new-password"
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
             [class.invalid]="password?.invalid && password?.touched"
           />
           <button type="button" class="toggle-pw" (click)="showPassword.update(v => !v)" tabindex="-1">
@@ -87,7 +72,7 @@
       }
 
       <button type="submit" class="btn-submit" [disabled]="loading()">
-        {{ loading() ? 'Registrando...' : 'Crear cuenta' }}
+        {{ loading() ? 'Ingresando...' : 'Ingresar' }}
       </button>
 
     </form>
@@ -98,8 +83,8 @@
       <span class="line"></span>
     </div>
 
-    <p class="login-link">
-      ¿Ya tenés cuenta? <a routerLink="/login">Ingresá aquí</a>
+    <p class="register-link">
+      ¿No tenés cuenta? <a routerLink="/register">Registrate aquí</a>
     </p>
 
   </div>

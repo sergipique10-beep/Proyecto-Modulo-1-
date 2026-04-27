@@ -1,1 +1,186 @@
-<p>lista-pedidos works!</p>
+<div class="page">
+
+  <header class="page-header">
+    <div class="ornament-divider">
+      <span class="line"></span>
+      <span class="title-wrap">
+        <svg class="icon-steak" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.06 3C16.27 3 14.6 3.84 13.5 5.22C12.4 3.84 10.73 3 8.94 3C5.66 3 3 5.66 3 8.94C3 13.32 7.44 16.93 12 21C16.56 16.93 21 13.32 21 8.94C21 5.66 18.34 3 18.06 3Z"/>
+        </svg>
+        <h1>Pedidos de Chuletón</h1>
+      </span>
+      <span class="line"></span>
+    </div>
+    <button class="btn-logout" (click)="cerrarSesion()">Cerrar sesión</button>
+  </header>
+
+  <div class="layout">
+
+    <!-- Columna principal -->
+    <div class="main-col">
+
+      <!-- Formulario -->
+      <section class="card form-card">
+        <h2 class="section-title">Nuevo Pedido</h2>
+
+        <form [formGroup]="form" (ngSubmit)="agregar()">
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="tipo">Tipo de corte</label>
+              <input
+                id="tipo"
+                type="text"
+                formControlName="tipo"
+                placeholder="Ej: Chuletón de Avileña"
+                [class.invalid]="tipo?.invalid && tipo?.touched"
+              />
+              @if (tipo?.invalid && tipo?.touched) {
+                <span class="error-text">Campo requerido</span>
+              }
+            </div>
+
+            <div class="field">
+              <label for="origen">Origen</label>
+              <input
+                id="origen"
+                type="text"
+                formControlName="origen"
+                placeholder="Ej: Ávila, España"
+                [class.invalid]="origen?.invalid && origen?.touched"
+              />
+              @if (origen?.invalid && origen?.touched) {
+                <span class="error-text">Campo requerido</span>
+              }
+            </div>
+
+            <div class="field">
+              <label for="peso">Peso (kg)</label>
+              <input
+                id="peso"
+                type="number"
+                formControlName="peso"
+                placeholder="0.00"
+                step="0.1"
+                min="0.1"
+                [class.invalid]="peso?.invalid && peso?.touched"
+              />
+              @if (peso?.invalid && peso?.touched) {
+                <span class="error-text">Ingresá un peso válido</span>
+              }
+            </div>
+
+            <div class="field">
+              <label for="maduracion">Maduración (días)</label>
+              <input
+                id="maduracion"
+                type="number"
+                formControlName="maduracion"
+                placeholder="0"
+                min="0"
+                [class.invalid]="maduracion?.invalid && maduracion?.touched"
+              />
+              @if (maduracion?.invalid && maduracion?.touched) {
+                <span class="error-text">Ingresá los días de maduración</span>
+              }
+            </div>
+
+            <div class="field">
+              <label for="cantidad">Cantidad</label>
+              <input
+                id="cantidad"
+                type="number"
+                formControlName="cantidad"
+                min="1"
+                [class.invalid]="cantidad?.invalid && cantidad?.touched"
+              />
+              @if (cantidad?.invalid && cantidad?.touched) {
+                <span class="error-text">Mínimo 1 unidad</span>
+              }
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn-agregar">
+            + Agregar al pedido
+          </button>
+        </form>
+      </section>
+
+      <!-- Lista de pedidos -->
+      <section class="card pedidos-card">
+        <h2 class="section-title">Pedidos registrados</h2>
+
+        @if (pedidos().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon">&#127830;</span>
+            <p>No hay pedidos aún.<br>Agregá un chuletón para empezar.</p>
+          </div>
+        } @else {
+          <div class="pedidos-list">
+            @for (pedido of pedidos(); track pedido.id) {
+              <div class="pedido-item">
+                <div class="pedido-info">
+                  <span class="pedido-tipo">{{ pedido.tipo }}</span>
+                  <div class="pedido-tags">
+                    <span class="tag">&#127757; {{ pedido.origen }}</span>
+                    <span class="tag">&#9878; {{ pedido.peso }} kg</span>
+                    <span class="tag">&#128336; {{ pedido.maduracion }} días</span>
+                    <span class="tag tag-cantidad">x{{ pedido.cantidad }}</span>
+                  </div>
+                </div>
+                <div class="pedido-right">
+                  <span class="pedido-subtotal">{{ pedido.peso * pedido.cantidad | number:'1.1-2' }} kg</span>
+                  <button class="btn-eliminar" (click)="eliminar(pedido.id)" title="Eliminar">&#10005;</button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+    </div>
+
+    <!-- Carrito lateral -->
+    <aside class="cart-sidebar">
+      <div class="card cart-card">
+        <h2 class="cart-title">
+          <span>&#127863;</span> Carrito
+        </h2>
+
+        <div class="ornament-divider sm">
+          <span class="line"></span>
+          <span class="diamond">◆</span>
+          <span class="line"></span>
+        </div>
+
+        <div class="cart-stats">
+          <div class="stat-row">
+            <span class="stat-label">Pedidos</span>
+            <span class="stat-value">{{ pedidos().length }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Unidades</span>
+            <span class="stat-value">{{ totalUnidades() }}</span>
+          </div>
+        </div>
+
+        <div class="ornament-divider sm">
+          <span class="line"></span>
+          <span class="diamond">◆</span>
+          <span class="line"></span>
+        </div>
+
+        <div class="cart-total">
+          <span class="total-label">Total</span>
+          <span class="total-value">{{ totalKg() | number:'1.1-2' }} <small>kg</small></span>
+        </div>
+
+        @if (pedidos().length > 0) {
+          <button class="btn-vaciar" (click)="vaciarCarrito()">Vaciar carrito</button>
+        }
+      </div>
+    </aside>
+
+  </div>
+</div>
