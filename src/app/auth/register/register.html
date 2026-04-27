@@ -1,0 +1,106 @@
+<div class="page">
+  <div class="card">
+
+    <div class="header">
+      <div class="emblem">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+          <path d="M32 6 L6 28 L10 28 L10 58 L26 58 L26 42 L38 42 L38 58 L54 58 L54 28 L58 28 Z" fill="#C46A3B" opacity="0.85"/>
+          <path d="M32 6 L6 28 L10 28 L10 58 L26 58 L26 42 L38 42 L38 58 L54 58 L54 28 L58 28 Z" stroke="#6B4226" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="27" y="28" width="10" height="14" rx="1" fill="#fdf6e3" stroke="#6B4226" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <h1>Bienvenido a la Masía</h1>
+      <p class="subtitle">Creá tu cuenta para ingresar</p>
+    </div>
+
+    <div class="ornament-divider">
+      <span class="line"></span>
+      <span class="diamond">◆</span>
+      <span class="line"></span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="field">
+        <label for="nombre">Nombre completo</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Tu nombre"
+          autocomplete="name"
+          [class.invalid]="nombre?.invalid && nombre?.touched"
+        />
+        @if (nombre?.invalid && nombre?.touched) {
+          <span class="error-text">Ingresá al menos 2 caracteres</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="tu@gmail.com"
+          autocomplete="email"
+          [class.invalid]="email?.invalid && email?.touched"
+        />
+        @if (email?.invalid && email?.touched) {
+          <span class="error-text">Ingresá un correo válido</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <div class="input-wrapper">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Mínimo 6 caracteres"
+            autocomplete="new-password"
+            [class.invalid]="password?.invalid && password?.touched"
+          />
+          <button type="button" class="toggle-pw" (click)="showPassword.update(v => !v)" tabindex="-1">
+            @if (showPassword()) {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            }
+          </button>
+        </div>
+        @if (password?.invalid && password?.touched) {
+          <span class="error-text">La contraseña debe tener al menos 6 caracteres</span>
+        }
+      </div>
+
+      @if (errorMsg()) {
+        <div class="error-banner">{{ errorMsg() }}</div>
+      }
+
+      <button type="submit" class="btn-submit" [disabled]="loading()">
+        {{ loading() ? 'Registrando...' : 'Crear cuenta' }}
+      </button>
+
+    </form>
+
+    <div class="ornament-divider">
+      <span class="line"></span>
+      <span class="diamond">◆</span>
+      <span class="line"></span>
+    </div>
+
+    <p class="login-link">
+      ¿Ya tenés cuenta? <a href="#">Ingresá aquí</a>
+    </p>
+
+  </div>
+</div>
